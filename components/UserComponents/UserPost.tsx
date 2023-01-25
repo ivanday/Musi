@@ -32,7 +32,6 @@ export const UserPost = ({ bands }: PostProps) => {
 
   const songName = useRef<HTMLInputElement>(null)
   const band = useRef<HTMLSelectElement>(null)
-  const file = useRef<HTMLInputElement>(null)
   const songKey = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -108,12 +107,12 @@ export const UserPost = ({ bands }: PostProps) => {
           <FormControl p="1rem">{url && <audio src={url} controls></audio>}</FormControl>
         </Stack>
         <ButtonGroup>
-          <Tooltip hasArrow label="Start Recording!">
+          <Tooltip hasArrow label={ recording? 'End Recording' : 'Start Recording'}>
             <IconButton
               aria-label="startRecording"
               icon={<AiOutlinePlayCircle />}
               onClick={record}
-              colorScheme={'red'}
+              bg={ recording? 'red' : 'gray.600' }
             />
           </Tooltip>
           <Button> Upload PDF </Button>

@@ -6,36 +6,48 @@ import {
   Flex,
   Input,
   List,
-  useColorModeValue
+  useColorModeValue,
 } from '@chakra-ui/react'
 import { Avatar, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, TagLabel } from '@chakra-ui/react'
-import { Button, Center, Link, Text } from '@chakra-ui/react'
+import { Button, Center, Text } from '@chakra-ui/react'
 import { FormControl, FormHelperText, FormLabel } from '@chakra-ui/react'
 import { EditableControls } from 'components'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import Link from 'next/link'
 
-type NewInputs = {
+declare interface NewInputs {
   email: string
   bandId: number
 }
 
-type Props = {
+declare interface BandProps {
   description: string
   members: []
   bandId: number
 }
 
-export const BandDescription = ({ description, members, bandId }: Props) => {
+declare interface RoleValues {
+  name: string,
+  id: number,
+  userId: number,
+  users: {
+    picture: string
+  }
+}
+
+export const BandDescription = ({ description, members, bandId }: BandProps) => {
   const [editDescrip, setDescrip] = useState('')
   const [editInstrument, setInstrument] = useState('')
-
+  console.log()
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors }
   } = useForm<NewInputs>()
+
+  console.log('band members:', members)
 
   const onSubmit = (data: any) => {
     data.bandId = bandId
@@ -73,19 +85,21 @@ export const BandDescription = ({ description, members, bandId }: Props) => {
           <TabPanel>
             <Center>
               <List fontSize="lg" fontWeight="bold">
-                {members.map((role) => {
+                {members.map((role:RoleValues) => {
                   return (
                     <Flex key={role.id} justifyContent="space-between" mb="1rem">
-                      <Tag
-                        size="xl"
-                        colorScheme={useColorModeValue('blue', 'green')}
-                        borderRadius="full"
-                      >
-                        <Avatar size="sm" mr={2} />
-                        <TagLabel fontWeight="bold" mr={3} key={role.name}>
-                          <Link href={`bands/${role.id}`}>{role.name}</Link>
-                        </TagLabel>
-                      </Tag>
+                      <Link href={`/users/${role.userId}`}>
+                        <Tag
+                          size="xl"
+                          colorScheme={useColorModeValue('blue', 'green')}
+                          borderRadius="full"
+                        >
+                          <Avatar size="sm" mr={2} src={role.users.picture} />
+                          <TagLabel fontWeight="bold" mr={3} key={role.name}>
+                            <Text>{role.name}</Text>
+                          </TagLabel>
+                        </Tag>
+                      </Link>
                     </Flex>
                   )
                 })}
